@@ -1,3 +1,22 @@
 page-distribution {
-
+  .distribution-wrapper {
+    height: 99%;
+    .card-selector {
+      height: 100%;
+      .next-card-button {
+        border-width: 0;
+        height: 100%;
+      }
+    }
+  }
+  .card-view {
+    height: 100%;
+    .card-button {
+      height: 100%;
+      border-width: 0;
+      .button-inner{
+        display: block;
+      }
+    }
+  }
 }

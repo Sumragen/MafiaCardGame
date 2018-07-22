@@ -6,6 +6,9 @@ import { DistributionPage } from './distribution';
   declarations: [
     DistributionPage,
   ],
+  entryComponents: [
+    DistributionPage
+  ],
   imports: [
     IonicPageModule.forChild(DistributionPage),
   ],

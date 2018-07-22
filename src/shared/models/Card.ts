@@ -1,3 +1,4 @@
-/**
- * Created by sumragen on 18.07.18.
- */
+export interface Card {
+  role: number,
+  name: string
+}
