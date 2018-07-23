@@ -59,6 +59,7 @@ export class PreferencesPage {
         [RoleEnum.INNOCENT]: this.totalPlayerAmount -
         this.mafiaAmount -
         this.getBoolCount(this.sheriffEnabled) -
+        this.getBoolCount(this.doctorEnabled) -
         this.getBoolCount(this.prostituteEnabled),
         [RoleEnum.MAFIA]: this.mafiaAmount,
         [RoleEnum.SHERIFF]: this.getBoolCount(this.sheriffEnabled),
