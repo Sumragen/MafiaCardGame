@@ -4,6 +4,11 @@ import * as _ from 'lodash';
 import {RoleNames} from "../../shared/consts/RoleNames";
 import {HomePage} from "../home/home";
 import {RoleSrcs} from "../../shared/consts/RoleSrcs";
+import {Store} from "@ngrx/store";
+import {PreferencesState} from "../../shared/interfaces/preferences-state";
+import {Subscription} from "rxjs";
+import {Card} from "../../shared/models/Card";
+import {RoleEnum} from "../../shared/consts/RoleEnum";
 
 /**
  * Generated class for the DistributionPage page.
@@ -20,33 +25,26 @@ import {RoleSrcs} from "../../shared/consts/RoleSrcs";
 export class DistributionPage {
 
   private _cards: any[] = [];
-  private _availableRoles: {
-    innocent: number,
-    mafia: number,
-    sheriff: number,
-    prostitute: number,
-    doctor: number
-  };
   public currentCard: {
     name: string,
     src: string
   };
 
+  private _storeChangeSubscription: Subscription;
+
   constructor(public navCtrl: NavController,
-              public navParams: NavParams) {
+              private store: Store<{ preferences: PreferencesState }>) {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad DistributionPage');
-    this._availableRoles = this.navParams.get('roles');
     this.shuffle();
   }
 
   showCard(): void {
-    const key = this._cards.pop();
+    const card = this._cards.pop();
     this.currentCard = {
-      name: RoleNames[key],
-      src: RoleSrcs[key]
+      name: RoleNames[card.role],
+      src: RoleSrcs[card.role]
     };
   }
 
@@ -63,13 +61,24 @@ export class DistributionPage {
   }
 
   private shuffle(): void {
-    _.each(_.keys(this._availableRoles), (role) => {
-      if (this._availableRoles[role] > 0) {
-        _.times(this._availableRoles[role], () => {
-          this._cards.push(role);
-        })
-      }
-    });
+    this._storeChangeSubscription = this.store.select('preferences')
+      .subscribe((preferences: PreferencesState) => {
+        const innocentsAmount = preferences.total - _.reduce(preferences.roles, (sum: number, role: number) => {
+          return sum + role;
+        }, 0);
+
+        this._cards = _.concat(this._cards, this.createArrayOfCards(innocentsAmount, RoleEnum.INNOCENT));
+
+        _.each(preferences.roles, (amount: number, role) => {
+          this._cards = _.concat(this._cards, this.createArrayOfCards(amount, +role))
+        });
+      });
     this._cards = _.shuffle(this._cards);
+  }
+
+  private createArrayOfCards(howMany: number, role: number): Card[] {
+    return _.map(_.range(howMany), () => {
+      return new Card(role);
+    })
   }
 }

@@ -1,5 +1,7 @@
 export interface PreferencesState {
   total: number,
   minimum: number,
-  roles: {}
+  roles: {
+    [role: number]: number
+  }
 }

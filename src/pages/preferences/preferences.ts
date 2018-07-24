@@ -7,7 +7,6 @@ import {Store} from "@ngrx/store";
 import {PreferencesState} from "../../shared/interfaces/preferences-state";
 import * as PreferencesActions from "./store/preferences.actions";
 import {Card} from "../../shared/models/Card"
-import * as _ from 'lodash';
 import {Subscription} from "rxjs";
 
 @IonicPage()
@@ -17,11 +16,9 @@ import {Subscription} from "rxjs";
 })
 export class PreferencesPage implements OnInit, OnDestroy {
 
-  public totalPlayerAmount: number;
-  public mafiaAmount: number = 1;
-  public sheriffEnabled: boolean = true;
-  public prostituteEnabled: boolean = true;
-  public doctorEnabled: boolean = false;
+  public sheriffEnabled: boolean;
+  public prostituteEnabled: boolean;
+  public doctorEnabled: boolean;
 
   public preferences: PreferencesState;
 
@@ -38,6 +35,10 @@ export class PreferencesPage implements OnInit, OnDestroy {
         this.preferences = {
           ...preferences
         };
+
+        this.sheriffEnabled = this.isSheriffEnabled();
+        this.prostituteEnabled = this.isProstituteEnabled();
+        this.doctorEnabled = this.isDoctorEnabled();
         console.log('new preferences', this.preferences);
       }, (error) => {
         console.log('state error', error);
@@ -54,47 +55,26 @@ export class PreferencesPage implements OnInit, OnDestroy {
 
   increaseMafiaAmount(): void {
     this.changeCardState(RoleEnum.MAFIA, true);
-    // if (this.totalPlayerAmount <= 0) {
-    //   this.errorService.show('Sorry, but you still doesn\'t enter total amount of players')
-    // } else {
-    //   if (this.mafiaAmount < this.totalPlayerAmount - 1 -
-    //     this.getBoolCount(this.sheriffEnabled) -
-    //     this.getBoolCount(this.doctorEnabled) -
-    //     this.getBoolCount(this.prostituteEnabled)) {
-    //     // this.changeCardState(RoleEnum.MAFIA, true);
-    //   } else {
-    //     this.errorService.show('Amount of Mafia couldn\'t be greatest than total amount of players')
-    //   }
-    // }
   }
 
   decreaseMafiaAmount(): void {
     this.changeCardState(RoleEnum.MAFIA, false);
-    // if (this.totalPlayerAmount <= 0) {
-    //   this.errorService.show('Sorry, but you still doesn\'t enter total amount of players')
-    // } else {
-    //   if (this.mafiaAmount > 1) {
-    //     this.changeCardState(RoleEnum.MAFIA, false);
-    //   } else {
-    //     this.errorService.show('Amount of mafia players must be at least 1');
-    //   }
-    // }
   }
 
   shuffle(): void {
-    this.navCtrl.setRoot(DistributionPage, {
-      roles: {
-        [RoleEnum.INNOCENT]: this.totalPlayerAmount -
-        this.mafiaAmount -
-        this.getBoolCount(this.sheriffEnabled) -
-        this.getBoolCount(this.doctorEnabled) -
-        this.getBoolCount(this.prostituteEnabled),
-        [RoleEnum.MAFIA]: this.mafiaAmount,
-        [RoleEnum.SHERIFF]: this.getBoolCount(this.sheriffEnabled),
-        [RoleEnum.DOCTOR]: this.getBoolCount(this.doctorEnabled),
-        [RoleEnum.PROSTITUTE]: this.getBoolCount(this.prostituteEnabled)
-      }
-    });
+    this.navCtrl.setRoot(DistributionPage);
+  }
+
+  isSheriffEnabled(): boolean {
+    return !!this.getRoleCount(RoleEnum.SHERIFF);
+  }
+
+  isDoctorEnabled(): boolean {
+    return !!this.getRoleCount(RoleEnum.DOCTOR);
+  }
+
+  isProstituteEnabled(): boolean {
+    return !!this.getRoleCount(RoleEnum.PROSTITUTE);
   }
 
   getMafiaCount(): number {
@@ -130,7 +110,4 @@ export class PreferencesPage implements OnInit, OnDestroy {
     return this.preferences.roles[role];
   }
 
-  private getBoolCount(bool: boolean): number {
-    return bool ? 1 : 0
-  }
 }
