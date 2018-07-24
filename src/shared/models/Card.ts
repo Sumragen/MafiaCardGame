@@ -1,4 +1,5 @@
-export interface Card {
-  role: number,
-  name: string
+export class Card {
+  constructor(public role: number) {
+
+  }
 }

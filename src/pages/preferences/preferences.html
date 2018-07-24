@@ -7,14 +7,14 @@
 
 
 <ion-content padding>
-  <ion-slides pager>
+  <ion-slides pager *ngIf="!!preferences">
     <ion-slide>
       <h2>Total amount of players</h2>
       <div class="player-count">
         <ion-icon [name]="'contacts'"></ion-icon>
-        <span *ngIf="totalPlayerAmount>0">{{ totalPlayerAmount }}</span>
+        <span *ngIf="preferences.total>0">{{ preferences.total }}</span>
       </div>
-      <ion-range [(ngModel)]="totalPlayerAmount" [min]="5" [max]="14" [step]="1" [snaps]="true">
+      <ion-range [(ngModel)]="preferences.total" [min]="preferences.minimum" [max]="preferences.minimum + 8" [step]="1" [snaps]="true" [pin]="true" (ionChange)="onTotalAmountChange()">
         <ion-icon range-left small [name]="'person'"></ion-icon>
         <ion-icon range-right [name]="'people'"></ion-icon>
       </ion-range>
@@ -24,7 +24,7 @@
       <h2>Amount of mafia</h2>
       <div class="mafia-count">
         <img class="mafia-count-icon" src="assets/imgs/mafia-icon.png" alt="mafia">
-        <span *ngIf="mafiaAmount>0">{{ mafiaAmount }}</span>
+        <span *ngIf="getMafiaCount()>0">{{ getMafiaCount() }}</span>
       </div>
 
       <ion-buttons>
@@ -44,19 +44,19 @@
           <ion-label>
             Sheriff
           </ion-label>
-          <ion-toggle [(ngModel)]="sheriffEnabled"></ion-toggle>
+          <ion-toggle [(ngModel)]="sheriffEnabled" (ionChange)="changeSheriffState()"></ion-toggle>
         </ion-item>
         <ion-item>
           <ion-label>
             Prostitute
           </ion-label>
-          <ion-toggle [(ngModel)]="prostituteEnabled"></ion-toggle>
+          <ion-toggle [(ngModel)]="prostituteEnabled" (ionChange)="changeProstituteState()"></ion-toggle>
         </ion-item>
         <ion-item>
           <ion-label>
             Doctor
           </ion-label>
-          <ion-toggle [(ngModel)]="doctorEnabled"></ion-toggle>
+          <ion-toggle [(ngModel)]="doctorEnabled" (ionChange)="changeDoctorState()"></ion-toggle>
         </ion-item>
       </ion-list>
     </ion-slide>
@@ -73,12 +73,12 @@
 <ion-footer>
   <ion-toolbar>
     <ion-title>
-      <div class="status-wrapper">
-        <ion-icon [name]="'contacts'">{{ totalPlayerAmount }}</ion-icon>
+      <div class="status-wrapper" *ngIf="!!preferences">
+        <ion-icon [name]="'contacts'">{{ preferences.total }}</ion-icon>
         <span>:</span>
         <div class="icon-wrapper">
           <img class="custom-icon" src="assets/imgs/gangster-icon.png" alt="mafia">
-          {{ mafiaAmount }}
+          {{ getMafiaCount() }}
         </div>
         <div class="icon-wrapper" *ngIf="sheriffEnabled">
           <img class="custom-icon" src="assets/imgs/sheriff-icon.png" alt="sheriff">
