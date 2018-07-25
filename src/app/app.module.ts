@@ -5,11 +5,13 @@ import {SplashScreen} from '@ionic-native/splash-screen';
 import {StatusBar} from '@ionic-native/status-bar';
 
 import {MyApp} from './app.component';
-import {HomePage} from '../pages/home/home';
-import {PreferencesPageModule} from "../pages/preferences/preferences.module";
-import {DistributionPageModule} from "../pages/distribution/distribution.module";
+import {HomePage} from './modules/home/home';
+import {PreferencesPageModule} from "./modules/preferences/preferences.module";
+import {DistributionPageModule} from "./modules/distribution/distribution.module";
 import {StoreModule} from "@ngrx/store";
-import {PreferencesReducers} from "../pages/preferences/store/preferences.reducers";
+import {PreferencesEffects} from "./modules/preferences/store/preferences.effects";
+import {reducers} from "./store/app.reducers";
+import {EffectsModule} from "@ngrx/effects";
 
 @NgModule({
   declarations: [
@@ -19,7 +21,8 @@ import {PreferencesReducers} from "../pages/preferences/store/preferences.reduce
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
-    StoreModule.forRoot({preferences: PreferencesReducers}),
+    StoreModule.forRoot(reducers),
+    EffectsModule.forRoot([PreferencesEffects]),
     PreferencesPageModule,
     DistributionPageModule
   ],

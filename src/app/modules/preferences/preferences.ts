@@ -1,12 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {IonicPage, NavController} from 'ionic-angular';
-import {ErrorService} from "../../shared/services/error.service";
 import {DistributionPage} from "../distribution/distribution";
-import {RoleEnum} from "../../shared/consts/RoleEnum";
+import {RoleEnum} from "../../../shared/consts/RoleEnum";
 import {Store} from "@ngrx/store";
-import {PreferencesState} from "../../shared/interfaces/preferences-state";
+import {PreferencesState} from "../../../shared/interfaces/preferences-state";
 import * as PreferencesActions from "./store/preferences.actions";
-import {Card} from "../../shared/models/Card"
+import {Card} from "../../../shared/models/Card"
 import {Subscription} from "rxjs";
 
 @IonicPage()
@@ -24,8 +23,7 @@ export class PreferencesPage implements OnInit, OnDestroy {
 
   private _storeChangeSubscription: Subscription;
 
-  constructor(public errorService: ErrorService,
-              public navCtrl: NavController,
+  constructor(public navCtrl: NavController,
               private store: Store<{ preferences: PreferencesState }>) {
   }
 
@@ -39,7 +37,6 @@ export class PreferencesPage implements OnInit, OnDestroy {
         this.sheriffEnabled = this.isSheriffEnabled();
         this.prostituteEnabled = this.isProstituteEnabled();
         this.doctorEnabled = this.isDoctorEnabled();
-        console.log('new preferences', this.preferences);
       }, (error) => {
         console.log('state error', error);
       });
@@ -47,10 +44,6 @@ export class PreferencesPage implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this._storeChangeSubscription.unsubscribe();
-  }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad PreferencesPage');
   }
 
   increaseMafiaAmount(): void {
@@ -95,14 +88,13 @@ export class PreferencesPage implements OnInit, OnDestroy {
 
   private changeCardState(role: number, isEnabled: boolean): void {
     if (isEnabled) {
-      this.store.dispatch(new PreferencesActions.AddCard(new Card(role)));
+      this.store.dispatch(new PreferencesActions.TryAddCard(new Card(role)));
     } else {
-      this.store.dispatch(new PreferencesActions.RemoveCard(new Card(role)));
+      this.store.dispatch(new PreferencesActions.TryRemoveCard(new Card(role)));
     }
   }
 
   onTotalAmountChange() {
-    console.log('onTotalAmountChange');
     this.store.dispatch(new PreferencesActions.ChangeTotalPlayerAmount(this.preferences.total));
   }
 

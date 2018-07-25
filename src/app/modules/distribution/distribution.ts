@@ -1,14 +1,14 @@
 import {Component} from '@angular/core';
 import {IonicPage, NavController, NavParams} from 'ionic-angular';
 import * as _ from 'lodash';
-import {RoleNames} from "../../shared/consts/RoleNames";
+import {RoleNames} from "../../../shared/consts/RoleNames";
 import {HomePage} from "../home/home";
-import {RoleSrcs} from "../../shared/consts/RoleSrcs";
+import {RoleSrcs} from "../../../shared/consts/RoleSrcs";
 import {Store} from "@ngrx/store";
-import {PreferencesState} from "../../shared/interfaces/preferences-state";
+import {PreferencesState} from "../../../shared/interfaces/preferences-state";
 import {Subscription} from "rxjs";
-import {Card} from "../../shared/models/Card";
-import {RoleEnum} from "../../shared/consts/RoleEnum";
+import {Card} from "../../../shared/models/Card";
+import {RoleEnum} from "../../../shared/consts/RoleEnum";
 
 /**
  * Generated class for the DistributionPage page.
