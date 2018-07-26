@@ -1,21 +1,14 @@
 import {Component} from '@angular/core';
-import {IonicPage, NavController, NavParams} from 'ionic-angular';
+import {IonicPage, NavController} from 'ionic-angular';
 import * as _ from 'lodash';
 import {RoleNames} from "../../../shared/consts/RoleNames";
 import {HomePage} from "../home/home";
 import {RoleSrcs} from "../../../shared/consts/RoleSrcs";
 import {Store} from "@ngrx/store";
 import {PreferencesState} from "../../../shared/interfaces/preferences-state";
-import {Subscription} from "rxjs";
 import {Card} from "../../../shared/models/Card";
 import {RoleEnum} from "../../../shared/consts/RoleEnum";
-
-/**
- * Generated class for the DistributionPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import {AppState} from "../../store/app.reducers";
 
 @IonicPage()
 @Component({
@@ -30,10 +23,8 @@ export class DistributionPage {
     src: string
   };
 
-  private _storeChangeSubscription: Subscription;
-
   constructor(public navCtrl: NavController,
-              private store: Store<{ preferences: PreferencesState }>) {
+              private store: Store<AppState>) {
   }
 
   ionViewDidLoad() {
@@ -61,7 +52,8 @@ export class DistributionPage {
   }
 
   private shuffle(): void {
-    this._storeChangeSubscription = this.store.select('preferences')
+    this.store.select('preferences')
+      .first()
       .subscribe((preferences: PreferencesState) => {
         const innocentsAmount = preferences.total - _.reduce(preferences.roles, (sum: number, role: number) => {
           return sum + role;

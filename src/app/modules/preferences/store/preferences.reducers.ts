@@ -1,4 +1,3 @@
-import * as _ from 'lodash';
 import {RoleEnum} from "../../../../shared/consts/RoleEnum";
 import {PreferencesState} from "../../../../shared/interfaces/preferences-state";
 import * as PreferencesActions from './preferences.actions';

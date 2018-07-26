@@ -5,18 +5,17 @@ import {SplashScreen} from '@ionic-native/splash-screen';
 import {StatusBar} from '@ionic-native/status-bar';
 
 import {MyApp} from './app.component';
-import {HomePage} from './modules/home/home';
 import {PreferencesPageModule} from "./modules/preferences/preferences.module";
 import {DistributionPageModule} from "./modules/distribution/distribution.module";
 import {StoreModule} from "@ngrx/store";
 import {PreferencesEffects} from "./modules/preferences/store/preferences.effects";
 import {reducers} from "./store/app.reducers";
 import {EffectsModule} from "@ngrx/effects";
+import {HomePageModule} from "./modules/home/home.module";
 
 @NgModule({
   declarations: [
-    MyApp,
-    HomePage
+    MyApp
   ],
   imports: [
     BrowserModule,
@@ -24,12 +23,12 @@ import {EffectsModule} from "@ngrx/effects";
     StoreModule.forRoot(reducers),
     EffectsModule.forRoot([PreferencesEffects]),
     PreferencesPageModule,
-    DistributionPageModule
+    DistributionPageModule,
+    HomePageModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
-    MyApp,
-    HomePage
+    MyApp
   ],
   providers: [
     StatusBar,
