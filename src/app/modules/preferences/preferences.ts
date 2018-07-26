@@ -95,7 +95,7 @@ export class PreferencesPage implements OnInit, OnDestroy {
   }
 
   onTotalAmountChange() {
-    this.store.dispatch(new PreferencesActions.ChangeTotalPlayerAmount(this.preferences.total));
+    this.store.dispatch(new PreferencesActions.TryChangeTotalPlayerAmount(this.preferences.total));
   }
 
   getRoleCount(role: number): number {

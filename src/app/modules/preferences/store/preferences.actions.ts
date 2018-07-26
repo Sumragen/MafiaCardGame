@@ -7,8 +7,16 @@ export const ACTIONS = {
   ADD_CARD: 'ADD_CARD',
   REMOVE_CARD: 'REMOVE_CARD',
   ON_ERROR: 'ON_ERROR',
+  TRY_CHANGE_TOTAL_PLAYER_AMOUNT: 'TRY_CHANGE_TOTAL_PLAYER_AMOUNT',
   CHANGE_TOTAL_PLAYER_AMOUNT: 'CHANGE_TOTAL_PLAYER_AMOUNT'
 };
+
+export class TryChangeTotalPlayerAmount implements Action {
+  readonly type = ACTIONS.TRY_CHANGE_TOTAL_PLAYER_AMOUNT;
+
+  constructor(public payload: number) {
+  };
+}
 
 export class TryAddCard implements Action {
   readonly type = ACTIONS.TRY_ADD_CARD;

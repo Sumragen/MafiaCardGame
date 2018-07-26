@@ -4,6 +4,7 @@ import {Store} from "@ngrx/store";
 import {catchError, withLatestFrom} from "rxjs/operators";
 import {of} from "rxjs/observable/of";
 import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
@@ -13,6 +14,7 @@ import {AppState} from "../../../store/app.reducers";
 import {Card} from "../../../../shared/models/Card";
 import {ErrorService} from "../../../../shared/services/error.service";
 import {PreferencesState} from "../../../../shared/interfaces/preferences-state";
+import * as _ from "lodash";
 
 @Injectable()
 export class PreferencesEffects {
@@ -52,6 +54,29 @@ export class PreferencesEffects {
           }
         }),
         catchError((error) => of(new PreferencesActions.OnError(error.message))))
+    });
+
+  @Effect()
+  changeTotalAmountOfPlayers = this.actions$
+    .ofType(PreferencesActions.ACTIONS.TRY_CHANGE_TOTAL_PLAYER_AMOUNT)
+    .map((action: PreferencesActions.TryChangeTotalPlayerAmount) => action.payload)
+    .switchMap((total: number) => {
+      return this.store$.select('preferences').first().pipe(
+        withLatestFrom(of(total), (state: PreferencesState, total: number) => {
+          const alreadyUsedRoles = _.reduce(state.roles, (sum, n) => {
+            return sum + n;
+          }, 0);
+          let actions = [];
+          if (total >= alreadyUsedRoles) {
+            actions = [new PreferencesActions.ChangeTotalPlayerAmount(total)];
+          } else {
+            actions = [new PreferencesActions.ChangeTotalPlayerAmount(state.total), new PreferencesActions.OnError('You couldn\'t change total amount of players')];
+          }
+          return actions;
+        }))
+        .mergeMap((actions) => {
+          return actions;
+        })
     });
 
   @Effect({dispatch: false})

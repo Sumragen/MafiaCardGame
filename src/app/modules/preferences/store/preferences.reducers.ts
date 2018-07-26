@@ -41,17 +41,10 @@ export function PreferencesReducers(state: PreferencesState = defaultState, acti
     }
     case PreferencesActions.ACTIONS.CHANGE_TOTAL_PLAYER_AMOUNT: {
       const total: number = action.payload as number;
-      const alreadyUsedRoles: number = _.reduce(state.roles, (sum, n) => {
-        return sum + n;
-      }, 0);
-      if (total < alreadyUsedRoles) {
-        return state
-      } else {
-        return {
-          ...state,
-          total: action.payload as number
-        };
-      }
+      return {
+        ...state,
+        total: total
+      };
     }
     default: {
       return state;
